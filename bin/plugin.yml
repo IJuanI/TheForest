@@ -1,0 +1,9 @@
+name: TheForest
+version: 0.1
+main: me.Juanco.forest.TheForest
+
+commands:
+    tf:
+        usage: /<command>
+        description: Main Command!
+        aliases: [theforest, thef, tforest, forest, f]
