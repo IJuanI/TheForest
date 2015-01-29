@@ -32,6 +32,9 @@ public class InventoryClick implements Listener {
 				e.setCancelled(true);
 				e.setCursor(new ItemStack(Material.AIR));
 				FlyareaCommand.cancel((Player)e.getWhoClicked());
+				Player p = (Player) e.getWhoClicked();
+				p.updateInventory();
+				p.closeInventory();
 			}
 		}
 	}

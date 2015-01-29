@@ -1,5 +1,6 @@
 package me.Juanco.forest;
 
+import me.Juanco.Events.AsyncPlayerChat;
 import me.Juanco.Events.InventoryClick;
 import me.Juanco.Events.PlayerDropItem;
 import me.Juanco.Events.PlayerInteract;
@@ -20,5 +21,6 @@ public class EventsHandler {
 		PlayerItemHeld.getInstance().register(pl);
 		InventoryClick.getInstance().register(pl);
 		PlayerQuit.getInstance().register(pl);
+		AsyncPlayerChat.getInstance().register(pl);
 	}
 }

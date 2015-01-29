@@ -38,6 +38,10 @@ public class Config {
 		return config;
 	}
 	
+	public void load() {
+		config = YamlConfiguration.loadConfiguration(cfile);
+	}
+	
 	public void save() {
 		try {
 			config.save(cfile);

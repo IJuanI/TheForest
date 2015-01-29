@@ -1,8 +1,11 @@
 package me.Juanco.Events;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.List;
 
+import me.Juanco.Commands.FlyareaCommand;
+import me.Juanco.Configs.Config;
 import me.Juanco.Configs.ConfigChests;
 import me.Juanco.Configs.ConfigPlayer;
 import me.Juanco.helpers.GiveItems;
@@ -26,6 +29,11 @@ import org.bukkit.plugin.Plugin;
 
 public class PlayerInteract implements Listener {
 
+
+	public static HashMap<Player, Location> p1 = new HashMap<Player, Location>();
+	public static HashMap<Player, Location> p2 = new HashMap<Player, Location>();
+	
+	Config co = Config.getInstance();
 	ConfigChests cc = ConfigChests.getInstance();
 	ConfigPlayer cp = ConfigPlayer.getInstance();
 	private PlayerInteract() { }
@@ -38,6 +46,15 @@ public class PlayerInteract implements Listener {
 		Bukkit.getPluginManager().registerEvents(this, pl);
 	}
 	
+	public static void saveloc(String path, Location loc, FileConfiguration fc) {
+		fc.set(path + ".world", loc.getWorld().getName());
+		fc.set(path + ".x", loc.getX());
+		fc.set(path + ".y", loc.getY());
+		fc.set(path + ".z", loc.getZ());
+		fc.set(path + ".yaw", loc.getYaw());
+		fc.set(path + ".pitch", loc.getPitch());
+	}
+	
 	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerInteract(PlayerInteractEvent e) {
@@ -48,6 +65,39 @@ public class PlayerInteract implements Listener {
 			else if (c.equals(GiveItems.pedometer())) {
 				if (Pedometer.displayed.contains(p)) Pedometer.hide(p);
 				else Pedometer.display(p);
+			} else if (c.equals(GiveItems.flyArea())) {
+				e.setCancelled(true);
+				if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
+					Location loc = e.getClickedBlock().getLocation();
+					p2.put(p, loc);
+					p.sendMessage(ChatColor.GREEN + "P2 Establecido!");
+					p.sendMessage(ChatColor.DARK_AQUA + "(" + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ() + ")");
+				} else if (e.getAction().equals(Action.LEFT_CLICK_BLOCK)) {
+					Location loc = e.getClickedBlock().getLocation();
+					p1.put(p, loc);
+					p.sendMessage(ChatColor.GREEN + "P1 Establecido!");
+					p.sendMessage(ChatColor.DARK_AQUA + "(" + loc.getBlockX() + ", " + loc.getBlockY() + ", " + loc.getBlockZ() + ")");
+				}
+				if (p1.containsKey(p) && p2.containsKey(p)) {
+					Location loc1 = p1.get(p);
+					Location loc2 = p2.get(p);
+					boolean a = false;
+					boolean b = false;
+					if (loc1.getBlockX() != loc2.getBlockX()) a = true;
+					if (loc1.getBlockZ() != loc2.getBlockZ()) b = true;
+					if (a == true && b == true) {
+						p.sendMessage(ChatColor.RED + "Has excedido la anchura maxima!");
+						FlyareaCommand.cancel(p);
+					} else if (a == false && b == false) {
+						p.sendMessage(ChatColor.RED + "Area muy chica!");
+						FlyareaCommand.cancel(p);
+					} else {
+						p.sendMessage(ChatColor.GREEN + "Especifica una orientacion! (+/-)");
+						p.sendMessage(ChatColor.DARK_AQUA + "Escribe para responder!");
+						p.sendMessage(ChatColor.RED + "\"salir\" para salir!");
+						AsyncPlayerChat.getInstance().confirm.add(p);
+					}
+				}
 			}
 		}
 		if (e.getClickedBlock() != null) {
