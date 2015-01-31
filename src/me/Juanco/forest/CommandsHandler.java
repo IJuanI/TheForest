@@ -3,6 +3,7 @@ package me.Juanco.forest;
 import me.Juanco.Commands.ChestCommand;
 import me.Juanco.Commands.FlyareaCommand;
 import me.Juanco.Commands.ModifyCommand;
+import me.Juanco.Commands.Test;
 import me.Juanco.helpers.GiveItems;
 
 import org.bukkit.ChatColor;
@@ -30,6 +31,9 @@ public class CommandsHandler {
 						return;
 					} else if (args[0].equalsIgnoreCase("modify")) {
 						ModifyCommand.modify(p, args);
+						return;
+					} else if (args[0].equalsIgnoreCase("test")) {
+						Test.test(p, args);
 						return;
 					}
 					p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&cComando desconocido"));

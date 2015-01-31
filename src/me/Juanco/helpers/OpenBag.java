@@ -46,10 +46,12 @@ public class OpenBag {
 		cp.load(p);
 		Inventory inv = invlist.get(p);
 		int n = -1;
-		for (ItemStack i : inv.getContents()) {
-			n++;
-			if (i != null) cp.get().set("Temp.Inv." + n, i);
-		}
+		try {
+			for (ItemStack i : inv.getContents()) {
+				n++;
+				if (i != null) cp.get().set("Temp.Inv." + n, i);
+			}
+		} catch (Exception e) { }
 		cp.save();
 	}
 	

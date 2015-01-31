@@ -2,23 +2,22 @@ package me.Juanco.Commands;
 
 import java.util.Arrays;
 
+import me.Juanco.Events.AsyncPlayerChat;
+import net.minecraft.server.v1_7_R4.ChatSerializer;
+import net.minecraft.server.v1_7_R4.IChatBaseComponent;
+import net.minecraft.server.v1_7_R4.PacketPlayOutChat;
+
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.craftbukkit.v1_7_R4.entity.CraftPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.meta.ItemMeta;
-
-import com.bobacadodl.JSONChatLib.JSONChatClickEventType;
-import com.bobacadodl.JSONChatLib.JSONChatColor;
-import com.bobacadodl.JSONChatLib.JSONChatExtra;
-import com.bobacadodl.JSONChatLib.JSONChatFormat;
-import com.bobacadodl.JSONChatLib.JSONChatHoverEventType;
-import com.bobacadodl.JSONChatLib.JSONChatMessage;
 
 public class ModifyCommand {
 
 	public static void modify(Player p, String[] args) {
 		if (args.length == 1) p.sendMessage(ChatColor.RED + "Especifica! (Name, Lore)");
-		else if (ChestCommand.notequals(args[1], Arrays.asList("Name", "Lore"))) p.sendMessage(ChatColor.RED + "Uso incorrecto, especifica Name o Lore!");
+		else if (ChestCommand.notequals(args[1], Arrays.asList("Name", "Lore", "add", "remove", "set", "clear"))) p.sendMessage(ChatColor.RED + "Uso incorrecto, especifica Name o Lore!");
 		else if (p.getItemInHand().getType() == Material.AIR) p.sendMessage(ChatColor.RED + "No puedes modificar aire!");
 		else if (args[1].equalsIgnoreCase("Name")) {
 			if (args.length == 2) p.sendMessage(ChatColor.RED + "Especifica un nombre!");
@@ -36,8 +35,12 @@ public class ModifyCommand {
 				p.updateInventory();
 				p.sendMessage(ChatColor.GREEN + "Accion exitosa!");
 			}
-		} else {
+		} else if (args[1].equalsIgnoreCase("Lore")) {
 			msg1(p);
+		} else if (args[1].equalsIgnoreCase("add")) {
+			p.sendMessage(ChatColor.GREEN + "Especifica un lore!");
+			p.sendMessage(ChatColor.RED + "\".salir\" para cancelar!");///tellraw @a {text:"OLAKASE.", color:"blue", bold:true, italic:true ,hoverEvent:{action:show_item,value:"{id:1, tag:{display:{Name:Test, Lore:[\"Quien lo lea es gay.\", \"Y mas quien lea este ultimo.\"]}}}"}}
+			AsyncPlayerChat.getInstance().Add.add(p);
 		}
 	}
 	
@@ -45,52 +48,32 @@ public class ModifyCommand {
 		p.sendMessage("");
 		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "&3&l&o*****************************************************"));
 		p.sendMessage(ChatColor.translateAlternateColorCodes('&', "                                     &6&l>> &a&lEspecifica una accion! &6&l<<"));
-		
-		JSONChatMessage m1 = new JSONChatMessage(" >> ", JSONChatColor.DARK_GRAY, Arrays.asList(JSONChatFormat.BOLD));
-		JSONChatExtra msg1 = new JSONChatExtra("Agregar", JSONChatColor.YELLOW, Arrays.asList(JSONChatFormat.BOLD));
-		msg1.setHoverEvent(JSONChatHoverEventType.SHOW_TEXT, "Agrega un Lore!");
-		msg1.setClickEvent(JSONChatClickEventType.SUGGEST_COMMAND, "test");
-		JSONChatExtra msg2 = new JSONChatExtra("* ", JSONChatColor.BLUE, Arrays.asList(JSONChatFormat.BOLD, JSONChatFormat.ITALIC));
-		JSONChatExtra msg3 = new JSONChatExtra(" <<", JSONChatColor.DARK_GRAY, Arrays.asList(JSONChatFormat.BOLD));
-		m1.addExtra(msg2);
-		m1.addExtra(msg1);
-		m1.addExtra(msg3);
-		m1.sendToPlayer(p);
+		IChatBaseComponent comp = ChatSerializer.a(ChatColor.translateAlternateColorCodes('&', "{text:\" >> \", color:dark_gray, bold:true, extra:[{text:\"* \", color:blue, "
+				+ "italic:true, bold:true}, {text:Agregar, color:yellow, bold:true, hoverEvent:{action:show_item,value:\"{id:1, tag:{display:{Name:&b&oAgregar, "
+				+ "Lore:[\\\"&a\\\", \\\"&aAgrega un &6Lore&a!\\\", \\\"&a\\\", \\\"&7&oThe Forest\\\"]}}}\"}, clickEvent:{action:run_command,value:\"/tf modify add\"}}, "
+				+ "{text:\" <<\", color:dark_gray, bold:true}]}"));
+		PacketPlayOutChat packet = new PacketPlayOutChat(comp, true);
+		((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet);
 		p.sendMessage("");
 		
-		JSONChatMessage m2 = new JSONChatMessage(" >> ", JSONChatColor.DARK_GRAY, Arrays.asList(JSONChatFormat.BOLD));
-		JSONChatExtra msg12 = new JSONChatExtra("Borrar", JSONChatColor.YELLOW, Arrays.asList(JSONChatFormat.BOLD));
-		msg12.setHoverEvent(JSONChatHoverEventType.SHOW_TEXT, "Borra un Lore!");
-		msg12.setClickEvent(JSONChatClickEventType.SUGGEST_COMMAND, "test");
-		JSONChatExtra msg22 = new JSONChatExtra("* ", JSONChatColor.RED, Arrays.asList(JSONChatFormat.BOLD, JSONChatFormat.ITALIC));
-		JSONChatExtra msg32 = new JSONChatExtra(" <<", JSONChatColor.DARK_GRAY, Arrays.asList(JSONChatFormat.BOLD));
-		m2.addExtra(msg22);
-		m2.addExtra(msg12);
-		m2.addExtra(msg32);
-		m2.sendToPlayer(p);
+		IChatBaseComponent comp2 = ChatSerializer.a(ChatColor.translateAlternateColorCodes('&', "{text:\" >> \", color:dark_gray, bold:true, extra:[{text:\"* \", color:red, "
+				+ "italic:true, bold:true}, {text:Borrar, color:yellow, bold:true, hoverEvent:{action:show_item,value:\"{id:1, tag:{display:{Name:&d&oBorrar, "
+				+ "Lore:[\\\"&a\\\", \\\"&aBorra un &6Lore&a!\\\", \\\"&a\\\", \\\"&7&oThe Forest\\\"]}}}\"}}, {text:\" <<\", color:dark_gray, bold:true}]}"));
+		PacketPlayOutChat packet2 = new PacketPlayOutChat(comp2, true);
+		((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet2);
 		p.sendMessage("");
 		
-		JSONChatMessage m3 = new JSONChatMessage(" >> ", JSONChatColor.DARK_GRAY, Arrays.asList(JSONChatFormat.BOLD));
-		JSONChatExtra msg13 = new JSONChatExtra("Modificar", JSONChatColor.YELLOW, Arrays.asList(JSONChatFormat.BOLD));
-		msg13.setHoverEvent(JSONChatHoverEventType.SHOW_TEXT, "Modifica un Lore!");
-		msg13.setClickEvent(JSONChatClickEventType.SUGGEST_COMMAND, "test");
-		JSONChatExtra msg23 = new JSONChatExtra("* ", JSONChatColor.WHITE, Arrays.asList(JSONChatFormat.BOLD, JSONChatFormat.ITALIC));
-		JSONChatExtra msg33 = new JSONChatExtra(" <<", JSONChatColor.DARK_GRAY, Arrays.asList(JSONChatFormat.BOLD));
-		m3.addExtra(msg23);
-		m3.addExtra(msg13);
-		m3.addExtra(msg33);
-		m3.sendToPlayer(p);
+		IChatBaseComponent comp3 = ChatSerializer.a(ChatColor.translateAlternateColorCodes('&', "{text:\" >> \", color:dark_gray, bold:true, extra:[{text:\"* \", color:white, "
+				+ "italic:true, bold:true}, {text:Modificar, color:yellow, bold:true, hoverEvent:{action:show_item,value:\"{id:1, tag:{display:{Name:&6&oModificar, "
+				+ "Lore:[\\\"&a\\\", \\\"&aCambia un &6Lore&a!\\\", \\\"&a\\\", \\\"&7&oThe Forest\\\"]}}}\"}}, {text:\" <<\", color:dark_gray, bold:true}]}"));
+		PacketPlayOutChat packet3 = new PacketPlayOutChat(comp3, true);
+		((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet3);
 		p.sendMessage("");
-		
-		JSONChatMessage m4 = new JSONChatMessage(" >> ", JSONChatColor.DARK_GRAY, Arrays.asList(JSONChatFormat.BOLD));
-		JSONChatExtra msg14 = new JSONChatExtra("Borrado Total", JSONChatColor.YELLOW, Arrays.asList(JSONChatFormat.BOLD));
-		msg14.setHoverEvent(JSONChatHoverEventType.SHOW_TEXT, "Borra todos los lores!");
-		msg14.setClickEvent(JSONChatClickEventType.SUGGEST_COMMAND, "test");
-		JSONChatExtra msg24 = new JSONChatExtra("* ", JSONChatColor.DARK_GREEN, Arrays.asList(JSONChatFormat.BOLD, JSONChatFormat.ITALIC));
-		JSONChatExtra msg34 = new JSONChatExtra(" <<", JSONChatColor.DARK_GRAY, Arrays.asList(JSONChatFormat.BOLD));
-		m4.addExtra(msg24);
-		m4.addExtra(msg14);
-		m4.addExtra(msg34);
-		m4.sendToPlayer(p);
+
+		IChatBaseComponent comp4 = ChatSerializer.a(ChatColor.translateAlternateColorCodes('&', "{text:\" >> \", color:dark_gray, bold:true, extra:[{text:\"* \", color:dark_green, "
+				+ "italic:true, bold:true}, {text:\"Borrado Total\", color:yellow, bold:true, hoverEvent:{action:show_item,value:\"{id:1, tag:{display:{Name:&3&o&lAniquilacion!, "
+				+ "Lore:[\\\"&a\\\", \\\"&aBorra todos los &6Lores&a!\\\", \\\"&a\\\", \\\"&7&oThe Forest\\\"]}}}\"}}, {text:\" <<\", color:dark_gray, bold:true}]}"));
+		PacketPlayOutChat packet4 = new PacketPlayOutChat(comp4, true);
+		((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet4);
 	}
 }
