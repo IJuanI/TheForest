@@ -28,7 +28,7 @@ public class InventoryClick implements Listener {
 	@EventHandler
 	public void onInventoryClick(InventoryClickEvent e) {
 		if (e.getCurrentItem() != null) {
-			if (e.getCurrentItem().equals(GiveItems.flyArea())) {
+			if (e.getCurrentItem().equals(GiveItems.selector())) {
 				e.setCancelled(true);
 				e.setCursor(new ItemStack(Material.AIR));
 				FlyareaCommand.cancel((Player)e.getWhoClicked());

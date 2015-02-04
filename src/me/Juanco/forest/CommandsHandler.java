@@ -3,6 +3,8 @@ package me.Juanco.forest;
 import me.Juanco.Commands.ChestCommand;
 import me.Juanco.Commands.FlyareaCommand;
 import me.Juanco.Commands.ModifyCommand;
+import me.Juanco.Commands.SeeareaCommand;
+import me.Juanco.Commands.SpawnareaCommand;
 import me.Juanco.Commands.Test;
 import me.Juanco.helpers.GiveItems;
 
@@ -28,6 +30,12 @@ public class CommandsHandler {
 						return;
 					} else if (args[0].equalsIgnoreCase("flyarea")) {
 						FlyareaCommand.flyarea(p, args);
+						return;
+					} else if (args[0].equalsIgnoreCase("seearea")) {
+						SeeareaCommand.SeeArea(p, args);
+						return;
+					} else if (args[0].equalsIgnoreCase("spawnarea")) {
+						SpawnareaCommand.SpawnArea(p, args);
 						return;
 					} else if (args[0].equalsIgnoreCase("modify")) {
 						ModifyCommand.modify(p, args);

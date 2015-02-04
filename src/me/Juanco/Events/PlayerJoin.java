@@ -1,5 +1,6 @@
 package me.Juanco.Events;
 
+import me.Juanco.Commands.SpawnareaCommand;
 import me.Juanco.Configs.ConfigPlayer;
 import me.Juanco.forest.TheForest;
 import me.Juanco.helpers.GiveItems;
@@ -26,6 +27,7 @@ public class PlayerJoin implements Listener {
 		Bukkit.getPluginManager().registerEvents(this, pl);
 	}
 	
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onPlayerJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
@@ -39,5 +41,6 @@ public class PlayerJoin implements Listener {
 		p.updateInventory();
 		Pedometer.load(p);
 		OpenBag.load(p);
+		if (SpawnareaCommand.isOnSpawn(e.getPlayer())) for (Player pl : Bukkit.getOnlinePlayers()) pl.hidePlayer(e.getPlayer());
 	}
 }

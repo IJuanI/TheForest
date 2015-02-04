@@ -40,6 +40,14 @@ public class PlayerMove implements Listener {
 		return null;
 	}
 	
+	@SuppressWarnings("deprecation")
+	public static void vanish(Player p, boolean b) {
+		for (Player pl : Bukkit.getOnlinePlayers()) {
+			if (b) pl.hidePlayer(p);
+			else pl.showPlayer(pl);
+		}
+	}
+	
 	@EventHandler
 	public void onPlayerMove(PlayerMoveEvent e) {
 		Location loc1 = e.getFrom();
@@ -84,12 +92,60 @@ public class PlayerMove implements Listener {
 								if (loc2.getBlockX() == fly1.getBlockX()) p.setAllowFlight(false);
 							}
 						} else {
-							if (c.get().getString("Fly Area.Direction").equalsIgnoreCase("+")) {
+							if (c.get().getString("Fly Area.Direction").equalsIgnoreCase("-")) {
 								if (loc2.getBlockZ() == fly1.getBlockZ()+1) p.setAllowFlight(true);
 								if (loc2.getBlockZ() == fly1.getBlockZ()) p.setAllowFlight(false);
 							} else {
 								if (loc2.getBlockZ() == fly1.getBlockZ()-1) p.setAllowFlight(true);
 								if (loc2.getBlockZ() == fly1.getBlockZ()) p.setAllowFlight(false);
+							}
+						}
+					}
+				}
+			}
+			Location loc1s1 = loadloc("See Area.p1", c.get());
+			Location loc2s1 = loadloc("See Area.p2", c.get());
+			if (loc1s1 != null && loc2s1 != null) {
+				boolean x = false;
+				boolean z = false;
+				boolean y = false;
+				boolean area = true;
+				if (fly1.getBlockX() == fly2.getBlockX()) x = true;
+				if (fly1.getBlockZ() == fly2.getBlockZ()) z = true;
+				if (fly1.getBlockY() < fly2.getBlockY()) y = true;
+				if (x != z) {
+					if (y) {
+						if (loc2.getBlockY() > fly2.getBlockY() || loc2.getBlockY() < fly1.getBlockY()) area = false;
+					} else if (loc2.getBlockY() < fly2.getBlockY() || loc2.getBlockY() > fly1.getBlockY()) area = false;
+					if (x) {
+						boolean z1 = false;
+						if (fly1.getBlockZ() < fly2.getBlockZ()) z1 = true;
+						if (z1) {
+							if (loc2.getBlockZ() > fly2.getBlockZ() || loc2.getBlockZ() < fly1.getBlockZ()) area = false;
+						} else if (loc2.getBlockZ() < fly2.getBlockZ() || loc2.getBlockZ() > fly1.getBlockZ()) area = false;
+					} else {
+						boolean x1 = false;
+						if (fly1.getBlockX() < fly2.getBlockX()) x1 = true;
+						if (x1) {
+							if (loc2.getBlockX() > fly2.getBlockX() || loc2.getBlockX() < fly1.getBlockX()) area = false;
+						} else if (loc2.getBlockX() < fly2.getBlockX() || loc2.getBlockX() > fly1.getBlockX()) area = false;
+					}
+					if (area) {
+						if (x) {
+							if (c.get().getString("See Area.Direction").equalsIgnoreCase("+")) {
+								if (loc2.getBlockX() == fly1.getBlockX()+1) vanish(p, true);
+								if (loc2.getBlockX() == fly1.getBlockX()) vanish(p, false);
+							} else {
+								if (loc2.getBlockX() == fly1.getBlockX()-1) vanish(p, true);
+								if (loc2.getBlockX() == fly1.getBlockX()) vanish(p, false);
+							}
+						} else {
+							if (c.get().getString("See Area.Direction").equalsIgnoreCase("-")) {
+								if (loc2.getBlockZ() == fly1.getBlockZ()+1) vanish(p, true);
+								if (loc2.getBlockZ() == fly1.getBlockZ()) vanish(p, false);
+							} else {
+								if (loc2.getBlockZ() == fly1.getBlockZ()-1) vanish(p, true);
+								if (loc2.getBlockZ() == fly1.getBlockZ()) vanish(p, false);
 							}
 						}
 					}

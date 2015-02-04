@@ -65,7 +65,9 @@ public class PlayerInteract implements Listener {
 			else if (c.equals(GiveItems.pedometer())) {
 				if (Pedometer.displayed.contains(p)) Pedometer.hide(p);
 				else Pedometer.display(p);
-			} else if (c.equals(GiveItems.flyArea())) {
+			} else if (c.equals(GiveItems.book())) {
+				
+			} else if (c.equals(GiveItems.selector())) {
 				e.setCancelled(true);
 				if (e.getAction().equals(Action.RIGHT_CLICK_BLOCK)) {
 					Location loc = e.getClickedBlock().getLocation();

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import me.Juanco.Configs.Config;
 import me.Juanco.Configs.ConfigPlayer;
+import me.Juanco.Events.AsyncPlayerChat;
 import me.Juanco.Events.PlayerInteract;
 import me.Juanco.helpers.GiveItems;
 
@@ -11,12 +12,12 @@ import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-public class FlyareaCommand {
+public class SeeareaCommand {
 
 	static Config c = Config.getInstance();
 	static ConfigPlayer cp = ConfigPlayer.getInstance();
 	public static ArrayList<Player> selecting = new ArrayList<Player>();
-	public static void flyarea(Player p, String[] args) {
+	public static void SeeArea(Player p, String[] args) {
 		if (!selecting.contains(p)) {
 			p.sendMessage(ChatColor.translateAlternateColorCodes('&', "\n"
 					+ "                     &9&l>> &aSelector activado &9&l<<\n"
@@ -28,6 +29,7 @@ public class FlyareaCommand {
 			p.setItemInHand(GiveItems.selector());
 			p.updateInventory();
 			selecting.add(p);
+			AsyncPlayerChat.getInstance().SeeArea.add(p);
 		} else cancel(p);
 	}
 	
@@ -35,6 +37,7 @@ public class FlyareaCommand {
 		if (selecting.contains(p)) {
 			cp.load(p);
 			selecting.remove(p);
+			AsyncPlayerChat.getInstance().SeeArea.remove(p);
 			int n = -1;
 			for (ItemStack i : p.getInventory().getContents()) {
 				n++;
@@ -56,6 +59,7 @@ public class FlyareaCommand {
 		if (selecting.contains(p)) {
 			cp.load(p);
 			selecting.remove(p);
+			AsyncPlayerChat.getInstance().SeeArea.remove(p);
 			int n = -1;
 			for (ItemStack i : p.getInventory().getContents()) {
 				n++;
@@ -69,7 +73,7 @@ public class FlyareaCommand {
 			p.updateInventory();
 			if (PlayerInteract.p1.containsKey(p)) PlayerInteract.p1.remove(p);
 			if (PlayerInteract.p2.containsKey(p)) PlayerInteract.p2.remove(p);
-			p.sendMessage(ChatColor.GREEN + "Fly Area establecida!");
+			p.sendMessage(ChatColor.GREEN + "See Area establecida!");
 		}
 	}
 }

@@ -31,7 +31,7 @@ public class GiveItems {
 		return pedometer;
 	}
 	
-	public static ItemStack flyArea() {
+	public static ItemStack selector() {
 		ItemStack fly = ItemStacker(Material.BLAZE_ROD, 1, 0, "&a&oSelector", "Usalo como en world edit!\n\nAncho maximo: 1\n\n\n&6&lNo es arrojable", false);
 		return fly;
 	}

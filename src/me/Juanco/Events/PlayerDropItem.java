@@ -27,7 +27,7 @@ public class PlayerDropItem implements Listener {
 	@EventHandler
 	public void onPlayerDropItem(PlayerDropItemEvent e) {
 		ItemStack c = e.getItemDrop().getItemStack();
-		List<ItemStack> list = Arrays.asList(GiveItems.book(), GiveItems.bag(), GiveItems.pedometer(), GiveItems.flyArea());
+		List<ItemStack> list = Arrays.asList(GiveItems.book(), GiveItems.bag(), GiveItems.pedometer(), GiveItems.selector());
 		for (ItemStack i : list) if (c.equals(i)) e.setCancelled(true);
 	}
 }

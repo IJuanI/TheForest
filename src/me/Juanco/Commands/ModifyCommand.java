@@ -38,9 +38,42 @@ public class ModifyCommand {
 		} else if (args[1].equalsIgnoreCase("Lore")) {
 			msg1(p);
 		} else if (args[1].equalsIgnoreCase("add")) {
-			p.sendMessage(ChatColor.GREEN + "Especifica un lore!");
-			p.sendMessage(ChatColor.RED + "\".salir\" para cancelar!");///tellraw @a {text:"OLAKASE.", color:"blue", bold:true, italic:true ,hoverEvent:{action:show_item,value:"{id:1, tag:{display:{Name:Test, Lore:[\"Quien lo lea es gay.\", \"Y mas quien lea este ultimo.\"]}}}"}}
-			AsyncPlayerChat.getInstance().Add.add(p);
+			if (AsyncPlayerChat.getInstance().other(p)) {
+				String msg = ChatColor.translateAlternateColorCodes('&', "\n &6[INFO] &aComandos por chat activados!\n "
+						+ "\n&bEspecifica un lore!\n&c\".salir\" para cancelar!\n ");
+				p.sendMessage(msg.split("\n"));
+				AsyncPlayerChat.getInstance().Add.add(p);
+				AsyncPlayerChat.item.put(p, p.getItemInHand());
+				AsyncPlayerChat.slot.put(p, p.getInventory().getHeldItemSlot());
+			} else p.sendMessage(ChatColor.RED + "No puedes hacer eso ahora!");
+		} else if (args[1].equalsIgnoreCase("remove")) {
+			if (AsyncPlayerChat.getInstance().other(p)) {
+			String msg = ChatColor.translateAlternateColorCodes('&', "\n &6[INFO] &aComandos por chat activados!\n "
+					+ "\n&bEspecifica una linea (primera: 1)!\n&c\".salir\" para cancelar!\n ");
+			p.sendMessage(msg.split("\n"));
+			AsyncPlayerChat.getInstance().Remove.add(p);
+			AsyncPlayerChat.item.put(p, p.getItemInHand());
+			AsyncPlayerChat.slot.put(p, p.getInventory().getHeldItemSlot());
+			} else p.sendMessage(ChatColor.RED + "No puedes hacer eso ahora!");
+		} else if (args[1].equalsIgnoreCase("set")) {
+			if (AsyncPlayerChat.getInstance().other(p)) {
+			String msg = ChatColor.translateAlternateColorCodes('&', "\n &6[INFO] &aComandos por chat activados!\n "
+					+ "\n&b&oEspecifica una linea (primera: 1)\n&b&oY luego un lore!\n&6&oEjemplo: \"&9&o2 &a&oEsto es un lore&6\""
+					+ "\n&c\".salir\" para cancelar!\n ");
+			p.sendMessage(msg.split("\n"));
+			AsyncPlayerChat.item.put(p, p.getItemInHand());
+			AsyncPlayerChat.slot.put(p, p.getInventory().getHeldItemSlot());
+			AsyncPlayerChat.getInstance().Set.add(p);
+			} else p.sendMessage(ChatColor.RED + "No puedes hacer eso ahora!");
+		} else if (args[1].equalsIgnoreCase("clear")) {
+			if (AsyncPlayerChat.getInstance().other(p)) {
+			String msg = ChatColor.translateAlternateColorCodes('&', "\n &6[INFO] &aComandos por chat activados!\n "
+					+ "\n&b&oEspecifica \"&aSi&b\" o \"&cNo&b\"!\n ");
+			p.sendMessage(msg.split("\n"));
+			AsyncPlayerChat.item.put(p, p.getItemInHand());
+			AsyncPlayerChat.slot.put(p, p.getInventory().getHeldItemSlot());
+			AsyncPlayerChat.getInstance().Clear.add(p);
+			} else p.sendMessage(ChatColor.RED + "No puedes hacer eso ahora!");
 		}
 	}
 	
@@ -58,21 +91,24 @@ public class ModifyCommand {
 		
 		IChatBaseComponent comp2 = ChatSerializer.a(ChatColor.translateAlternateColorCodes('&', "{text:\" >> \", color:dark_gray, bold:true, extra:[{text:\"* \", color:red, "
 				+ "italic:true, bold:true}, {text:Borrar, color:yellow, bold:true, hoverEvent:{action:show_item,value:\"{id:1, tag:{display:{Name:&d&oBorrar, "
-				+ "Lore:[\\\"&a\\\", \\\"&aBorra un &6Lore&a!\\\", \\\"&a\\\", \\\"&7&oThe Forest\\\"]}}}\"}}, {text:\" <<\", color:dark_gray, bold:true}]}"));
+				+ "Lore:[\\\"&a\\\", \\\"&aBorra un &6Lore&a!\\\", \\\"&a\\\", \\\"&7&oThe Forest\\\"]}}}\"}, clickEvent:{action:run_command,value:\"/tf modify remove\"}}, "
+				+ "{text:\" <<\", color:dark_gray, bold:true}]}"));
 		PacketPlayOutChat packet2 = new PacketPlayOutChat(comp2, true);
 		((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet2);
 		p.sendMessage("");
 		
 		IChatBaseComponent comp3 = ChatSerializer.a(ChatColor.translateAlternateColorCodes('&', "{text:\" >> \", color:dark_gray, bold:true, extra:[{text:\"* \", color:white, "
 				+ "italic:true, bold:true}, {text:Modificar, color:yellow, bold:true, hoverEvent:{action:show_item,value:\"{id:1, tag:{display:{Name:&6&oModificar, "
-				+ "Lore:[\\\"&a\\\", \\\"&aCambia un &6Lore&a!\\\", \\\"&a\\\", \\\"&7&oThe Forest\\\"]}}}\"}}, {text:\" <<\", color:dark_gray, bold:true}]}"));
+				+ "Lore:[\\\"&a\\\", \\\"&aCambia un &6Lore&a!\\\", \\\"&a\\\", \\\"&7&oThe Forest\\\"]}}}\"}, clickEvent:{action:run_command,value:\"/tf modify set\"}},"
+				+ " {text:\" <<\", color:dark_gray, bold:true}]}"));
 		PacketPlayOutChat packet3 = new PacketPlayOutChat(comp3, true);
 		((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet3);
 		p.sendMessage("");
 
 		IChatBaseComponent comp4 = ChatSerializer.a(ChatColor.translateAlternateColorCodes('&', "{text:\" >> \", color:dark_gray, bold:true, extra:[{text:\"* \", color:dark_green, "
 				+ "italic:true, bold:true}, {text:\"Borrado Total\", color:yellow, bold:true, hoverEvent:{action:show_item,value:\"{id:1, tag:{display:{Name:&3&o&lAniquilacion!, "
-				+ "Lore:[\\\"&a\\\", \\\"&aBorra todos los &6Lores&a!\\\", \\\"&a\\\", \\\"&7&oThe Forest\\\"]}}}\"}}, {text:\" <<\", color:dark_gray, bold:true}]}"));
+				+ "Lore:[\\\"&a\\\", \\\"&aBorra todos los &6Lores&a!\\\", \\\"&a\\\", \\\"&7&oThe Forest\\\"]}}}\"}, clickEvent:{action:run_command,value:\"/tf modify clear\"}}, "
+				+ "{text:\" <<\", color:dark_gray, bold:true}]}"));
 		PacketPlayOutChat packet4 = new PacketPlayOutChat(comp4, true);
 		((CraftPlayer) p).getHandle().playerConnection.sendPacket(packet4);
 	}

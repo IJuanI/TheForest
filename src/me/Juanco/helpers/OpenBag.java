@@ -57,22 +57,24 @@ public class OpenBag {
 	
 	@SuppressWarnings("deprecation")
 	public static void load() {
-		for (File f : cp.folder().listFiles()) {
-			for (Player p : Bukkit.getOnlinePlayers()) {
-				cp.load(p);
-				if (cp.getfile().equals(f)) {
-					if (cp.get().contains("Temp.Inv")) {
-						String name = ChatColor.translateAlternateColorCodes('&', "&a&lMochila personal");
-						int size = 3*9;
-						Inventory inv = Bukkit.createInventory(null, size, name);
-						for (String s : cp.get().getConfigurationSection("Temp.Inv").getKeys(false)) {
-							int slot = Integer.valueOf(Integer.parseInt(s));
-							ItemStack i = cp.get().getItemStack("Temp.Inv." + s);
-							inv.setItem(slot, i);
+		if (cp.folder().exists()) {
+			for (File f : cp.folder().listFiles()) {
+				for (Player p : Bukkit.getOnlinePlayers()) {
+					cp.load(p);
+					if (cp.getfile().equals(f)) {
+						if (cp.get().contains("Temp.Inv")) {
+							String name = ChatColor.translateAlternateColorCodes('&', "&a&lMochila personal");
+							int size = 3*9;
+							Inventory inv = Bukkit.createInventory(null, size, name);
+							for (String s : cp.get().getConfigurationSection("Temp.Inv").getKeys(false)) {
+								int slot = Integer.valueOf(Integer.parseInt(s));
+								ItemStack i = cp.get().getItemStack("Temp.Inv." + s);
+								inv.setItem(slot, i);
+							}
+							invlist.put(p, inv);
+							cp.get().set("Temp.Inv", null);
+							cp.save();
 						}
-						invlist.put(p, inv);
-						cp.get().set("Temp.Inv", null);
-						cp.save();
 					}
 				}
 			}
