@@ -18,6 +18,7 @@ public class TheForest extends JavaPlugin {
 	public void onEnable() {
 		plugin = this;
 		Config.getInstance().setup(this);
+		Defaults.config();
 		EventsHandler.register(this);
 		for (Player p : Bukkit.getOnlinePlayers()) {
 			ConfigPlayer.getInstance().load(p);
